@@ -1,29 +1,18 @@
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileReader;
 import java.io.IOException;
-import java.util.Collection;
 import java.util.*;
 public class Main {
-    //Hamdi Aden 4/6/25 CSCI1660
+    //Hamdi Aden 5/3/25 CSCI1660
     static Scanner input = new Scanner(System.in);
     static ArrayList<String> taskList = new ArrayList<>();
     static List<ToDoList> task = new ArrayList<>();
-static                 ObjectMapper map = new ObjectMapper();
-
+    static ObjectMapper map = new ObjectMapper();
     public static void main(String[] args) throws IOException {
-        File file = new File("data.json");
-        BufferedReader br = new BufferedReader(new FileReader(file));
 
-        String st;
-        String total = "";
-        while((st = br.readLine())!= null){
-            total = total + st;
-        }
-        taskList = map.readValue(total, new TypeReference<ArrayList<ToDoList>>() {});
+
         int options = 0;
         while (options != 6) {
             System.out.println("Please choose an option:");
@@ -35,36 +24,43 @@ static                 ObjectMapper map = new ObjectMapper();
             System.out.println("(6) Exit");
             options = input.nextInt();
             input.nextLine();
-
+            String st;
+            String total = "";
 
             if (options == 1) {
-                addTask((ArrayList<String>) taskList);
+                addTask((ArrayList<ToDoList>) task);
             } else if (options == 2) {
-                removeTask((ArrayList<String>) taskList);
+                removeTask((ArrayList<ToDoList>) task);
             } else if (options == 3) {
-                updateTask((ArrayList<String>) taskList);
+                updateTask((ArrayList<ToDoList>) task);
             } else if (options == 4) {
-                listTask((ArrayList<String>) taskList);
+                File file = new File("data.json");
+                if (file.exists() && file.length() > 0) {
+                    System.out.println("File is not empty, reading data...");
+                    task = map.readValue(file, new TypeReference<ArrayList<ToDoList>>() {});
+                } else {
+                    System.out.println("File is empty or missing, initializing empty task list...");
+                    task = new ArrayList<>();
+                }
+                System.out.println(task);
+                listTask((ArrayList<ToDoList>) task);
             } else if (options == 5) {
                 listAllTasks((List<ToDoList>) task);
             }
-            else if(options == 6){
-                dataChart((ArrayList<String>) taskList);
-            }
-            else if (options == 7) {
-                map.writeValue(new File("data.json"),task);
+            else if (options == 6) {
+                map.writeValue(new File("data.json"), task);
+                System.out.println(task);
                 System.exit(0);
             } else {
                 System.out.println("Invalid option. Please try again.");
             }
-
 
         }
 
 
     }
 
-    static String addTask(ArrayList<String> a) {
+    static String addTask(ArrayList<ToDoList> a) {
 
         System.out.println("What task should I add?");
         String title = input.nextLine();
@@ -86,7 +82,7 @@ static                 ObjectMapper map = new ObjectMapper();
 
     }
 
-    static void updateTask(ArrayList<String> a) {
+    static void updateTask(ArrayList<ToDoList> a) {
         Scanner scanner = new Scanner(System.in);
         System.out.println(taskList);
         System.out.println("Which task do you wish to update?");
@@ -105,14 +101,14 @@ static                 ObjectMapper map = new ObjectMapper();
         }
     }
 
-    static void listTask(ArrayList<String> a) {
-        Collections.sort(taskList);
-        for (int i = 0; i < taskList.size(); i++) {
-            System.out.println(taskList);
+    static void listTask(ArrayList<ToDoList> a) {
+        Collections.sort(task);
+        for (int i = 0; i < task.size(); i++) {
+            System.out.println(task);
         }
     }
 
-    static void removeTask(ArrayList<String> a) {
+    static void removeTask(ArrayList<ToDoList> a) {
         System.out.println("Which item should I remove?");
         String remove = input.nextLine();
         taskList.remove(remove);
@@ -147,9 +143,5 @@ static                 ObjectMapper map = new ObjectMapper();
             input.nextLine();
         }
     }
-    static void dataChart(ArrayList<String>a) throws IOException {
-        System.out.println(task);
 
-        
-    }
 }
