@@ -5,13 +5,14 @@ public class ToDoList implements Comparable<ToDoList>, Iterable<ToDoList>{
     private String description;
     private int priority;
 
+    public ToDoList() {
+    }
+
     public ToDoList(String title, String description, int priority) {
         this.title = title;
         this.description = description;
         this.priority = priority;
-    }
 
-    public ToDoList() {
     }
 
     public String getTitle() {
